@@ -14,7 +14,7 @@ from detectron2.config import get_cfg
 from detectron2.data.detection_utils import read_image
 from detectron2.utils.logger import setup_logger
 
-from vision.fair.detectron2.demo.predictor import VisualizationDemo
+from predictor import VisualizationDemo
 
 # constants
 WINDOW_NAME = "COCO detections"
@@ -153,9 +153,11 @@ def main() -> None:
         frames_per_second = video.get(cv2.CAP_PROP_FPS)
         num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         basename = os.path.basename(args.video_input)
+        print(video,video.isOpened(),width,height,frames_per_second,num_frames,basename)
         codec, file_ext = (
             ("x264", ".mkv") if test_opencv_video_format("x264", ".mkv") else ("mp4v", ".mp4")
         )
+        print(codec,file_ext)
         if codec == ".mp4v":
             warnings.warn("x264 codec not available, switching to mp4v")
         if args.output:
@@ -175,6 +177,7 @@ def main() -> None:
                 isColor=True,
             )
         assert os.path.isfile(args.video_input)
+        print(args.video_input,num_frames)
         for vis_frame in tqdm.tqdm(demo.run_on_video(video), total=num_frames):
             if args.output:
                 output_file.write(vis_frame)
